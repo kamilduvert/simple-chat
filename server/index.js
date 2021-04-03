@@ -14,6 +14,16 @@ const io = socketio(server);
 app.use(cors());
 app.use(router);
 
+// Run when client connects
+io.on('connect', (socket) => {
+  console.log('We have a new connection!!!');
+
+  socket.on('disconnect', () => {
+    console.log('Use has left!')
+  })
+});
+
+
 server.listen(PORT, () => {
   console.log(`Server is running on Port ${PORT}`);
 });
