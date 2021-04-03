@@ -1,8 +1,46 @@
-import React from 'react';
+//== Packages
+import React, { useState, useEffect } from "react";
+import queryString from 'query-string';
+import io from "socket.io-client";
 
-const Chat = () => {
+let socket;
+
+const Chat = ({ location }) => {
+  const [, setUsername] = useState('');
+  const [, setRoom] = useState('');
+  const ENDPOINT = 'localhost:5000';
+
+  // Get username and room from Join component via URL 
+  useEffect(() => {
+    const { username, room } = queryString.parse(location.search);
+    setUsername(username);
+    setRoom(room);
+
+    // For Socket.io v3:
+    const connectionOptions =  {
+      "force new connection" : true,
+      "reconnectionAttempts": "Infinity", //avoid having user reconnect manually in order to prevent dead clients after a server restart
+      "timeout" : 10000, //before connect_error and connect_timeout are emitted.           
+      "transports" : ["websocket"]
+    };
+    // Set the first connection
+    socket = io(ENDPOINT, connectionOptions);
+
+    // Client send the first emission with 'join' event to server
+    socket.emit('join', { username, room }, error => {
+      if (error) {
+        alert(error);
+      }
+    });
+
+  }, [ENDPOINT, location.search]);
+
   return (
-    <h1>Chat</h1>
+    <div className="chat__container">
+      <header className="chat__header">
+        <h1 className="chat__header__title">Chat</h1>
+      </header>
+    </div>
   )
 };
 

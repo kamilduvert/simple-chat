@@ -18,8 +18,16 @@ app.use(router);
 io.on('connect', (socket) => {
   console.log('We have a new connection!!!');
 
+  // Server receives the emission from 'join' event from client-side
+  socket.on('join', ({ username, room }) => {
+    console.log(`${username} has joined the chatroom ${room}`);
+  });
+ 
+
+
+
   socket.on('disconnect', () => {
-    console.log('Use has left!')
+    console.log('User has left!')
   })
 });
 
@@ -27,3 +35,4 @@ io.on('connect', (socket) => {
 server.listen(PORT, () => {
   console.log(`Server is running on Port ${PORT}`);
 });
+

@@ -1,3 +1,4 @@
+//== Packages
 import React, { useState } from 'react';
 import { Link } from "react-router-dom";
 
@@ -37,7 +38,7 @@ const Join = () => {
           </div>
 
           {/* Prevents form to be sent incomplete / Use query string to pass info to the Chat component */}
-          <Link onClick={e => (!username || !room) ? e.preventDefault() : null} to={`/chat?name=${username}&room=${room}`}>
+          <Link onClick={e => (!username || !room) ? e.preventDefault() : null} to={`/chat?username=${username}&room=${room}`}>
             <button type="submit" className="btn">Join Chat</button>
           </Link>
         </form>
