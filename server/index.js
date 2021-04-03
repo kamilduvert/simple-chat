@@ -15,19 +15,17 @@ app.use(cors());
 app.use(router);
 
 // Run when client connects
-io.on('connect', (socket) => {
+io.on('connection', (socket) => {
   console.log('We have a new connection!!!');
 
-  // Server receives the emission from 'join' event from client-side
-  socket.on('join', ({ username, room }) => {
+  // Server receives the emission with 'join' event from client-side
+  socket.on('join', ({ username, room }, callback) => {
     console.log(`${username} has joined the chatroom ${room}`);
+
   });
  
-
-
-
   socket.on('disconnect', () => {
-    console.log('User has left!')
+    console.log('User has left!!!')
   })
 });
 

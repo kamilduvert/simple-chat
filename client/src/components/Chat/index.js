@@ -26,12 +26,18 @@ const Chat = ({ location }) => {
     // Set the first connection
     socket = io(ENDPOINT, connectionOptions);
 
-    // Client send the first emission with 'join' event to server
-    socket.emit('join', { username, room }, error => {
-      if (error) {
-        alert(error);
+    // Join chatroom
+    socket.emit('join', { username, room }, ({ message }) => {
+      if (message) {
+        alert(message);
       }
     });
+
+    // When unmounting component disconnect user
+    return () => {
+      socket.emit('disconnect');
+      socket.off(); // stop the instance
+    }
 
   }, [ENDPOINT, location.search]);
 
