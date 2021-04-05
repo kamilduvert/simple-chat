@@ -3,12 +3,14 @@ import React, { useState, useEffect } from "react";
 import queryString from 'query-string';
 import io from "socket.io-client";
 
+const ENDPOINT = 'localhost:5000';
 let socket;
 
 const Chat = ({ location }) => {
   const [, setUsername] = useState('');
   const [, setRoom] = useState('');
-  const ENDPOINT = 'localhost:5000';
+  const [messages, setMessages] = useState([]);
+  const [message, setMessage] = useState('');
 
   // Get username and room from Join component via URL 
   useEffect(() => {
@@ -27,25 +29,41 @@ const Chat = ({ location }) => {
     socket = io(ENDPOINT, connectionOptions);
 
     // Join chatroom
-    socket.emit('join', { username, room }, ({ message }) => {
-      if (message) {
-        alert(message);
+    socket.emit('join', { username, room }, (error) => {
+      if (error) {
+        alert(error);
       }
     });
 
-    // When unmounting component disconnect user
-    return () => {
-      socket.emit('disconnect');
-      socket.off(); // stop the instance
-    }
+  }, [location.search]);
 
-  }, [ENDPOINT, location.search]);
+  // Receiving a new message
+  useEffect(() => {
+    socket.on('message', (message) => {
+      setMessages([...messages, message]);
+    })
+  }, [messages]);
+
+  const sendMessage = (event) => {
+    event.preventDefault();
+    if (message) {
+      socket.emit('chatMessage', message, () => {
+        setMessage('');
+      });
+    }
+  }
+
+  console.log(message, messages);
 
   return (
     <div className="chat__container">
       <header className="chat__header">
         <h1 className="chat__header__title">Chat</h1>
       </header>
+      <form onSubmit={sendMessage}>
+        <input value={message} onChange={(e) => setMessage(e.target.value)}/>
+        <button type="submit">Send</button>
+      </form>
     </div>
   )
 };
