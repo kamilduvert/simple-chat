@@ -1,0 +1,41 @@
+.chat__message {
+  margin: 10px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  &__user{
+    font-weight: bold;
+    color: $dark-color-b;
+  }
+
+  &__date {
+    margin-left: 5px;
+    font-size: 0.6rem;
+    color: rgb(172, 172, 172);
+    font-style: italic;
+    display: block;
+  }
+
+  &__text {
+    margin: 5px 0;
+    letter-spacing: 0;
+    word-wrap: break-word;
+    border-radius: 20px;
+    padding: 10px 20px;
+    background-color: $light-color;
+  }
+}
+
+.backgroundUser {
+  background-color: $light-color-user;
+  color: $light-color;
+}
+
+.colorUser {
+  color: $light-color-user;
+}
+
+.alignRight {
+  align-items: flex-end;
+}

@@ -4,25 +4,22 @@ import { Link } from "react-router-dom";
 
 const Join = () => {
 
-  const [username, setUsername] = useState('');
+  const [name, setName] = useState('');
   const [room, setRoom] = useState('');
 
   return (
     <div className="join__container">
-      <header className="join__header">
-        <h1 className="join__header__title">Join</h1>
-      </header>
-      <main className="join__main">
+        <h1 className="join__title">Welcome! 👋</h1>
         <form className="join__form">
           <div className="join__form__control">
-            <label htmlFor="username">Username</label>
+            <label htmlFor="name">Name</label>
             <input
               type="text"
-              name="username"
-              value={username}
-              id="username"
-              placeholder="Enter username..."
-              onChange={(e) => setUsername(e.target.value)}
+              name="name"
+              value={name}
+              id="name"
+              placeholder="Enter name..."
+              onChange={(e) => setName(e.target.value)}
             />
           </div>
           <div className="join__form__control">
@@ -31,18 +28,17 @@ const Join = () => {
               <option value="">--Please select a room--</option>
 							<option value="JavaScript">JavaScript</option>
 							<option value="Python">Python</option>
-							<option value="NodeJS">PHP</option>
+							<option value="NodeJS">NodeJs</option>
 							<option value="Ruby">Ruby</option>
 							<option value="Java">Java</option>
 						</select>
           </div>
 
           {/* Prevents form to be sent incomplete / Use query string to pass info to the Chat component */}
-          <Link onClick={e => (!username || !room) ? e.preventDefault() : null} to={`/chat?username=${username}&room=${room}`}>
-            <button type="submit" className="btn">Join Chat</button>
+          <Link onClick={e => (!name || !room) ? e.preventDefault() : null} to={`/chat?name=${name}&room=${room}`}>
+            <button type="submit" className="btn join__form__btn">Join Chat</button>
           </Link>
         </form>
-      </main>
     </div>
   )
 };

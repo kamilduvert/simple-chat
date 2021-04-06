@@ -1,17 +1,17 @@
 const users = [];
 
 //=== User joins chat ========================
-const userJoin = (id, username, room) => {
+const userJoin = (id, name, room) => {
   // "Beau Gosse du 93" => beaugossedu93
-  username = username.trim().toLowerCase();
+  name = name.trim().toLowerCase();
   room = room.trim().toLowerCase();
 
-  // Check if username already exists in the room
-  const existingUser = users.find((user) => user.username === username && user.room === room);
+  // Check if name already exists in the room
+  const existingUser = users.find((user) => user.name === name && user.room === room);
   if (existingUser) {
-    return { error: "Username is already taken"};
+    return { error: "name is already taken"};
   }
-  const user = { id, username, room};
+  const user = { id, name, room};
   users.push(user);
   return { user };
 };

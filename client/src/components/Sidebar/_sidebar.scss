@@ -1,0 +1,13 @@
+.chat__sidebar {
+  background-color: $dark-color-b;
+  padding: 20px 20px 60px;
+  overflow: auto;
+
+  &__users {
+    background-color: $light-color;
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin-top: 10px;
+    text-align: left;
+  }
+}

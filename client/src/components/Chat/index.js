@@ -3,35 +3,42 @@ import React, { useState, useEffect } from "react";
 import queryString from 'query-string';
 import io from "socket.io-client";
 
+//== Components
+import Header from '../Header';
+import Sidebar from '../Sidebar';
+import Messages from '../Messages';
+import Input from '../Input';
+
 const ENDPOINT = 'localhost:5000';
 let socket;
 
 const Chat = ({ location }) => {
-  const [, setUsername] = useState('');
-  const [, setRoom] = useState('');
+  const [name, setName] = useState('');
+  const [room, setRoom] = useState('');
+  const [users, setUsers] = useState([]);
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
 
   // Get username and room from Join component via URL 
   useEffect(() => {
-    const { username, room } = queryString.parse(location.search);
-    setUsername(username);
+    const { name, room } = queryString.parse(location.search);
+    setName(name);
     setRoom(room);
 
     // For Socket.io v3:
-    const connectionOptions =  {
-      "force new connection" : true,
+    const connectionOptions = {
+      "force new connection": true,
       "reconnectionAttempts": "Infinity", //avoid having user reconnect manually in order to prevent dead clients after a server restart
-      "timeout" : 10000, //before connect_error and connect_timeout are emitted.           
-      "transports" : ["websocket"]
+      "timeout": 10000, //before connect_error and connect_timeout are emitted.           
+      "transports": ["websocket"]
     };
     // Set the first connection
     socket = io(ENDPOINT, connectionOptions);
 
     // Join chatroom
-    socket.emit('join', { username, room }, (error) => {
+    socket.emit('join', { name, room }, (error) => {
       if (error) {
-        alert(error);
+        console.error(error);
       }
     });
 
@@ -41,29 +48,32 @@ const Chat = ({ location }) => {
   useEffect(() => {
     socket.on('message', (message) => {
       setMessages([...messages, message]);
-    })
-  }, [messages]);
+    });
+
+    socket.on("roomUsers", ({ users }) => {
+      setUsers(users);
+    });
+  }, [messages, users]);
 
   const sendMessage = (event) => {
     event.preventDefault();
     if (message) {
-      socket.emit('chatMessage', message, () => {
+      socket.emit('sendMessage', message, () => {
         setMessage('');
       });
     }
   }
 
-  console.log(message, messages);
-
   return (
     <div className="chat__container">
-      <header className="chat__header">
-        <h1 className="chat__header__title">Chat</h1>
-      </header>
-      <form onSubmit={sendMessage}>
-        <input value={message} onChange={(e) => setMessage(e.target.value)}/>
-        <button type="submit">Send</button>
-      </form>
+      <Header room={room} />
+      <main className="chat__main">
+        <Sidebar users={users} />
+        <div className="chat__messages__wrapper">
+          <Messages messages={messages} name={name} />
+          <Input sendMessage={sendMessage} message={message} setMessage={setMessage} />
+        </div>
+      </main>
     </div>
   )
 };

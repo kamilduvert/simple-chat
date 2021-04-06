@@ -19,8 +19,8 @@ app.use(cors());
 // Run when client connects
 io.on('connection', (socket) => {
   // Server receives the emission with 'join' event from client-side
-  socket.on('join', ({ username, room }, callback) => {
-    const { user, error } = userJoin(socket.id, username, room);
+  socket.on('join', ({ name, room }, callback) => {
+    const { user, error } = userJoin(socket.id, name, room);
 
     // Error handler
     if (error) return callback(error);
@@ -29,27 +29,37 @@ io.on('connection', (socket) => {
     socket.join(user.room);
 
     // Welcome user
-    socket.emit('message', { user: 'admin', text: `${user.username}, welcome to room ${user.room}.`});
+    socket.emit('message', { user: 'ChatBot', text: `Welcome to room ${user.room}!`});
 
     // Broadcast when a user connects
-    socket.broadcast.to(user.room).emit('message', { user: 'admin', text: `${user.username} has joined!` });
+    socket.broadcast.to(user.room).emit('message', { user: 'ChatBot', text: `${user.name} has joined!` });
 
+    // Send users and room info
+    io.to(user.room).emit('roomUsers', {room: user.room, users: getRoomUsers(user.room)});
+    
     callback();
 
   });
 
   // Listen for chatMessage
-  socket.on('chatMessage', (message, callback) => {
+  socket.on('sendMessage', (message, callback) => {
     const user = getCurrentUser(socket.id);
+    console.log(user);
 
-    io.to(user.room).emit('message', {user: user.username, text: message});
+    // Send new message to all room users
+    io.to(user.room).emit('message', {user: user.name, text: message});
      
     callback();
   })
  
+  // Runs when client disconnects
   socket.on('disconnect', () => {
-    console.log('User has left!!!')
-  })
+    const user = userLeave(socket.id);
+    if(user) {
+      io.to(user.room).emit('message', { user: 'ChatBot', text: `${user.name} has left.` });
+      io.to(user.room).emit('roomUsers', {room: user.room, users: getRoomUsers(user.room)});
+    }
+  });
 });
 
 // Routing

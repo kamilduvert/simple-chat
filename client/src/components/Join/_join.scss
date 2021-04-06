@@ -1,0 +1,38 @@
+.join {
+
+  &__container {
+    width: 300px;
+  }
+
+  &__title {
+    text-align: center;
+    font-size: 2.5rem;
+    padding: 20px;
+    background: $dark-color-a;
+	  border-top-left-radius: 5px;
+	  border-top-right-radius: 5px;
+  }
+
+  &__form {
+    padding: 30px 40px;
+    background: $dark-color-b;
+
+    &__control {
+      margin-bottom: 20px 0;
+
+      label {
+        display: block;
+        margin: 5px 0 5px;
+      }
+
+    }
+
+    &__btn {
+      margin-top: 15px;
+      width: 100%;
+    }
+  }
+
+  
+}
+

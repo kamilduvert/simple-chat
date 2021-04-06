@@ -1,0 +1,17 @@
+.chat__form {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 10px;
+
+  &__input {
+    border-radius: 5px;
+    border: 1px solid $dark-color-a;
+  }
+
+  &__btn {
+    margin-left: 5px;
+    background: transparent;
+    font-size: 1.5rem; 
+  }
+}

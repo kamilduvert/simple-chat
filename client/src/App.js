@@ -8,10 +8,13 @@ import Join from './components/Join';
 
 const App = () => {
   return (
-    <Router>
-      <Route path="/" exact component={Join} />
-      <Route path="/chat" component={Chat} />
-    </Router>
+    <div className="app">
+      <Router>
+        <Route path="/" exact component={Join} />
+        <Route path="/chat" component={Chat} />
+      </Router>
+    </div>
+
   );
 }
 
